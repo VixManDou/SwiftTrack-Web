@@ -1,0 +1,13 @@
+{
+  "name": "swifttrack-web",
+  "version": "1.0.0",
+  "description": "Sistema Monolítico Modular para el Control Logístico de Paquetería",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.22.2"
+  }
+}

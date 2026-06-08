@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SwiftTrack Web - Panel Logístico</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <header class="bg-blue-600 text-white p-6 shadow-md">
+        <h1 class="text-3xl font-bold">SwiftTrack Web</h1>
+        <p class="text-sm opacity-80">Control Logístico de Paquetería en Tiempo y Forma</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto my-8 p-6 bg-white rounded-lg shadow-sm">
+        <section class="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <h2 class="text-xl font-semibold mb-2">Buscador Público de Rastreo</h2>
+            <form action="/rastreo" method="GET" class="flex gap-2">
+                <input type="text" name="folio" placeholder="Introduce el folio (Ej: ST-98231)" class="flex-1 p-2 border rounded" required>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Buscar Paquete</button>
+            </form>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold mb-4">Control General de Envíos</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border">
+                    <thead>
+                        <tr class="bg-gray-200 text-left text-xs font-semibold uppercase">
+                            <th class="p-3 border">Folio Único</th>
+                            <th class="p-3 border">Destino</th>
+                            <th class="p-3 border">Peso (kg)</th>
+                            <th class="p-3 border">Estado Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% paquetes.forEach(paquete => { %>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3 font-mono font-bold text-blue-600"><%= paquete.folio %></td>
+                                <td class="p-3"><%= paquete.destino %></td>
+                                <td class="p-3"><%= paquete.peso %></td>
+                                <td class="p-3">
+                                    <span class="px-2 py-1 rounded text-xs font-bold <%= paquete.estado === 'Entregado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                        <%= paquete.estado %>
+                                    </span>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

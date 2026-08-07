@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SwiftTrack Web — Rastreo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Paleta de colores personalizada proporcionada por el usuario + matices adicionales */
+      .color1 { color: #11282e; }
+      .color2 { color: #0e535f; }
+      .color3 { color: #0a8c9d; }
+      .color4 { color: #05d6e8; }
+      .color5 { color: #0ffff8; }
+      .color6 { color: #e2e2e2; } /* matiz adicional: gris claro */
+
+      :root{
+        --c1: #11282e; /* oscuro principal */
+        --c2: #0e535f;
+        --c3: #0a8c9d;
+        --c4: #05d6e8;
+        --c5: #0ffff8;
+        --c6: #e2e2e2; /* gris neutro */
+      }
+
+      /* Gradientes y fondos con más matices */
+      .brand-bg { background: linear-gradient(90deg,var(--c1) 0%, var(--c2) 40%, var(--c3) 100%); }
+      .brand-accent { background-image: linear-gradient(90deg,var(--c4),var(--c5)); }
+      .muted-bg { background: linear-gradient(180deg, #ffffff 0%, var(--c6) 100%); }
+
+      /* Botones y componentes */
+      .btn-brand { background: linear-gradient(90deg,var(--c4),var(--c5)); color: var(--c1); box-shadow: 0 10px 30px rgba(5,214,232,0.12); transform: translateY(0); transition: transform .2s ease; }
+      .btn-brand:hover { transform: translateY(-3px) scale(1.01); }
+      .btn-cta { background: linear-gradient(90deg,var(--c3),var(--c2)); color: white; box-shadow: 0 8px 24px rgba(10,138,157,0.12); }
+
+      .card { border: 1px solid rgba(17,40,46,0.06); background: linear-gradient(180deg, #ffffff 0%, #fbfdfd 100%); }
+      .card-subtle { background: var(--c6); }
+
+      /* Sombras más suaves y elevación */
+      .soft-shadow { box-shadow: 0 8px 30px rgba(2,6,23,0.06); }
+
+      .social-icon { width: 20px; height: 20px; vertical-align: middle; }
+      /* Animaciones sutiles */
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes floaty { 0% { transform: translateY(0); } 50% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+
+      .animate-fade { animation: fadeIn .6s ease both; }
+      .animate-up { animation: slideUp .7s cubic-bezier(.2,.9,.3,1) both; }
+      .animate-float { animation: floaty 4s ease-in-out infinite; }
+    </style>
+  </head>
+  <body class="bg-gradient-to-b from-white to-gray-50 min-h-screen antialiased text-gray-800">
+    <header class="brand-bg text-white sticky top-0 z-30 soft-shadow">
+      <div class="max-w-7xl mx-auto py-4 px-6 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">SwiftTrack</h1>
+          <p class="text-xs text-white/80">Rastreo y control logístico de paquetería</p>
+        </div>
+        <nav class="text-sm flex items-center gap-4">
+          <a href="/" class="text-white/90 hover:underline">Inicio</a>
+          <a href="/admin/login" class="px-3 py-2 rounded-lg btn-brand animate-float">Panel Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6">
+      <% if (mostrarLogin) { %>
+      <section class="mb-8 animate-fade">
+        <div class="bg-white rounded-2xl shadow-lg p-6 card soft-shadow">
+          <h2 class="text-xl font-semibold color2">Acceso al panel administrativo</h2>
+          <p class="mt-2 text-sm text-gray-600">Ingresa las credenciales de administrador para gestionar los paquetes ficticios.</p>
+          <form action="/admin/login" method="POST" class="mt-4 grid md:grid-cols-3 gap-3">
+            <input name="usuario" type="text" placeholder="Usuario" class="w-full border rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2" />
+            <input name="password" type="password" placeholder="Contraseña" class="w-full border rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2" />
+            <button type="submit" class="w-full btn-brand px-4 py-3 rounded-lg font-semibold">Entrar</button>
+          </form>
+          <% if (loginMensaje) { %>
+            <p class="mt-4 text-sm text-red-600"><%= loginMensaje %></p>
+          <% } %>
+        </div>
+      </section>
+      <% } %>
+
+      <!-- HERO / INTRO -->
+      <section class="mb-12 animate-fade">
+        <div class="bg-white rounded-2xl shadow-lg p-8 lg:flex lg:items-center lg:justify-between gap-8 card soft-shadow">
+          <div class="lg:flex-1">
+            <h2 class="text-3xl font-bold color2">Rastrea y gestiona envíos con SwiftTrack</h2>
+            <p class="mt-3 text-gray-600 max-w-2xl">SwiftTrack Web facilita el control logístico de paquetería: seguimiento en tiempo real, gestión de estados y panel administrativo simple y seguro.
+            Ideal para operaciones pequeñas y medianas que requieren visibilidad desde recolección hasta entrega.</p>
+
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+              <a href="#quienes-somos" class="btn-cta px-5 py-3 rounded-lg animate-float">Quiénes somos</a>
+            </div>
+
+            <div class="mt-6 text-sm text-gray-500">
+              <strong>¿Tienes dudas?</strong> Visita nuestras redes o contacta al soporte.
+            </div>
+          </div>
+
+          <div id="rastreo" class="lg:w-1/3 p-6 rounded-lg card-subtle soft-shadow animate-up">
+            <h3 class="text-lg font-semibold mb-3">Rastreo rápido</h3>
+            <img src="/images/hero.svg" alt="Rastreo y logística" class="w-full rounded-lg mb-4 object-cover shadow-sm animate-fade" loading="lazy" />
+            <form action="/rastreo" method="POST" class="space-y-3">
+              <input name="folio" id="folio-input" type="text" placeholder="Ej. ST-98231" class="w-full border rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2" />
+              <button type="submit" class="w-full btn-cta px-4 py-3 rounded-lg font-semibold">Rastrear paquete</button>
+            </form>
+
+            <% if (mensaje) { %>
+              <p class="mt-4 text-sm text-red-600"><%= mensaje %></p>
+            <% } %>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES / SYNOPSIS -->
+      <section id="features" class="mb-10">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-xl shadow card soft-shadow animate-up">
+            <img src="/images/feature1.svg" alt="Tracking" class="w-full h-32 object-cover rounded-md mb-3" loading="lazy" />
+            <h4 class="font-semibold color3">Visibilidad en tiempo real</h4>
+            <p class="mt-2 text-sm text-gray-600">Consulta el estado de cada envío con un folio único y recibe la información esencial (destino, peso y estado actual).</p>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow card soft-shadow animate-up" style="animation-delay:.06s">
+            <img src="/images/feature2.svg" alt="Almacén" class="w-full h-32 object-cover rounded-md mb-3" loading="lazy" />
+            <h4 class="font-semibold color3">Panel administrativo sencillo</h4>
+            <p class="mt-2 text-sm text-gray-600">Gestiona estados de forma rápida: 'En Recolección', 'En Ruta' o 'Entregado'. Ideal para logística diaria.</p>
+          </div>
+          <div class="bg-white p-6 rounded-xl shadow card soft-shadow animate-up" style="animation-delay:.12s">
+            <img src="/images/feature3.svg" alt="Entrega" class="w-full h-32 object-cover rounded-md mb-3" loading="lazy" />
+            <h4 class="font-semibold color3">Integración con Supabase</h4>
+            <p class="mt-2 text-sm text-gray-600">Datos centralizados y seguros en Supabase, con acceso remoto mediante claves en el servidor.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARRIERS / TRUST -->
+      <section class="mb-10">
+        <div class="bg-white rounded-xl p-6 shadow card soft-shadow">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h3 class="text-xl font-semibold color2">Rastreamos distintos tipos de paquetes</h3>
+              <p class="mt-2 text-sm text-gray-600">Trabajamos con múltiples operadores logísticos para dar seguimiento a envíos nacionales e internacionales, desde documentos hasta paquetes de mayor volumen.</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <span class="px-4 py-2 rounded-full bg-sky-50 text-sky-700 border border-sky-100 font-medium">FedEx</span>
+              <span class="px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 font-medium">DHL</span>
+              <span class="px-4 py-2 rounded-full bg-amber-50 text-amber-700 border border-amber-100 font-medium">UPS</span>
+              <span class="px-4 py-2 rounded-full bg-violet-50 text-violet-700 border border-violet-100 font-medium">Estafeta</span>
+              <span class="px-4 py-2 rounded-full bg-rose-50 text-rose-700 border border-rose-100 font-medium">Mercado Envíos</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHO WE ARE -->
+      <section id="quienes-somos" class="mb-10">
+        <div class="bg-white rounded-xl p-6 shadow">
+          <h3 class="text-2xl font-semibold color2">Quiénes somos</h3>
+          <p class="mt-3 text-gray-600">SwiftTrack Web es una plataforma diseñada para brindar visibilidad total en el envío de paquetería. Combinamos tecnología y logística para que operadores y clientes puedan monitorear cada paquete con claridad y confianza.</p>
+          <div class="mt-6 grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-slate-200 p-4">
+              <h4 class="font-semibold color3">Misión</h4>
+              <p class="mt-2 text-sm text-gray-600">Facilitar el seguimiento seguro y eficiente de envíos, optimizando la operación logística y reduciendo incertidumbres en cada etapa.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-4">
+              <h4 class="font-semibold color3">Visión</h4>
+              <p class="mt-2 text-sm text-gray-600">Ser la herramienta de referencia para pequeñas y medianas operaciones de paquetería que necesiten control, trazabilidad y decisión basada en datos.</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-4">
+              <h4 class="font-semibold color3">Valores</h4>
+              <p class="mt-2 text-sm text-gray-600">Compromiso con la claridad, la agilidad operativa y la seguridad de la información en cada envío procesado.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOCIAL & CONTACT -->
+      <section class="mb-12">
+        <div class="bg-white rounded-xl p-6 shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h4 class="font-semibold color2">Síguenos</h4>
+            <p class="text-sm text-gray-600">Encuéntranos en redes para novedades y soporte.</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <a href="https://www.instagram.com/switftrackweb?igsh=MXY3cTF0N2wwM3NyNQ==" target="_blank" class="text-gray-600 hover:text-sky-600 flex items-center gap-2" rel="noopener noreferrer">
+              <!-- Instagram SVG -->
+              <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 6.5A4.5 4.5 0 1016.5 13 4.5 4.5 0 0012 8.5zm5.25-3.5a1.125 1.125 0 11-1.125 1.125A1.125 1.125 0 0117.25 5zM12 10a2 2 0 11-2 2 2 2 0 012-2z"/></svg>
+              Instagram
+            </a>
+            <a href="https://www.facebook.com/share/g/1Er3LsHLY4/" target="_blank" class="text-gray-600 hover:text-sky-600 flex items-center gap-2" rel="noopener noreferrer">
+              <!-- Facebook SVG -->
+              <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22 12a10 10 0 10-11.5 9.87v-6.99h-2.2V12h2.2V9.8c0-2.17 1.3-3.37 3.3-3.37.96 0 1.96.17 1.96.17v2.15h-1.1c-1.08 0-1.42.67-1.42 1.36V12h2.42l-.39 2.88h-2.03v6.99A10 10 0 0022 12z"/></svg>
+              Facebook
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <% if (mostrarGestion) { %>
+      <section class="mb-12 animate-fade">
+        <div class="grid lg:grid-cols-3 gap-6">
+          <!-- Left: Listado con estilo moderno -->
+          <div class="lg:col-span-2 bg-white rounded-2xl p-6 card soft-shadow">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h2 class="text-lg font-semibold color1">Panel Administrativo</h2>
+                <p class="text-sm text-gray-500">Listado de envíos registrados</p>
+              </div>
+              <div class="text-sm text-gray-500">Total: <strong><%= paquetes ? paquetes.length : 0 %></strong></div>
+            </div>
+
+            <div class="overflow-auto">
+              <table class="min-w-full text-sm border-separate" style="border-spacing: 0 10px;">
+                <thead>
+                  <tr class="text-left text-gray-600 text-xs">
+                    <th class="px-4 py-2">Folio</th>
+                    <th class="px-4 py-2">Destino</th>
+                    <th class="px-4 py-2">Peso</th>
+                    <th class="px-4 py-2">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (paquetes && paquetes.length > 0) { %>
+                    <% paquetes.forEach(function(p, i) { %>
+                      <tr class="bg-white rounded-lg shadow-sm mb-2" style="display: table-row;">
+                        <td class="px-4 py-3 align-top"><span class="font-medium"><%= p.folio %></span></td>
+                        <td class="px-4 py-3 align-top text-gray-600"><%= p.destino %></td>
+                        <td class="px-4 py-3 align-top"><%= p.peso %> kg</td>
+                        <td class="px-4 py-3 align-top">
+                          <% if (p.estado === 'En Recolección') { %>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">En Recolección</span>
+                          <% } else if (p.estado === 'En Ruta') { %>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs bg-blue-100 text-blue-800">En Ruta</span>
+                          <% } else if (p.estado === 'Entregado') { %>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs bg-green-100 text-green-800">Entregado</span>
+                          <% } else { %>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-700"><%= p.estado %></span>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  <% } else { %>
+                    <tr>
+                      <td class="px-4 py-4" colspan="4">No hay paquetes registrados.</td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right: Panel de acciones y estadísticas -->
+          <aside class="bg-white rounded-2xl p-6 card soft-shadow">
+            <h3 class="text-lg font-semibold color1">Acciones rápidas</h3>
+            <p class="text-sm text-gray-500 mb-4">Actualiza el estado de un paquete desde aquí.</p>
+
+            <form action="/admin/actualizar?rol=admin&auth=true" method="POST" class="space-y-3">
+              <div>
+                <label class="text-sm text-gray-600">Folio</label>
+                <input name="folio" type="text" placeholder="ST-98231" class="w-full border rounded-lg px-3 py-2 mt-1" />
+              </div>
+              <div>
+                <label class="text-sm text-gray-600">Nuevo estado</label>
+                <select name="estado" class="w-full border rounded-lg px-3 py-2 mt-1">
+                  <option value="En Recolección">En Recolección</option>
+                  <option value="En Ruta">En Ruta</option>
+                  <option value="Entregado">Entregado</option>
+                </select>
+              </div>
+              <div>
+                <button type="submit" class="w-full btn-brand px-4 py-2 rounded-lg">Actualizar estado</button>
+              </div>
+            </form>
+
+            <hr class="my-4" />
+
+            <div>
+              <h4 class="text-sm font-medium">Resumen</h4>
+              <ul class="mt-2 text-sm text-gray-600 space-y-2">
+                <li>Total paquetes: <strong><%= paquetes ? paquetes.length : 0 %></strong></li>
+                <li>En Ruta: <strong><%= paquetes ? paquetes.filter(p => p.estado === 'En Ruta').length : 0 %></strong></li>
+                <li>Entregados: <strong><%= paquetes ? paquetes.filter(p => p.estado === 'Entregado').length : 0 %></strong></li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <% } %>
+
+    </main>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+e2Gdw3EO1B5e+9uhu+eZzxe7k7GIaJiPtJC/E7r0=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QVNmW5PqHNV7NZX5UPj0L3s5ZLUx3ozQwElIj7gUHUY=" crossorigin=""></script>
+    <script>
+      async function initMap(estado, destino) {
+        const status = document.getElementById('map-status');
+        const mapContainer = document.getElementById('map');
+        if (!mapContainer || !estado) {
+          if (status) status.innerText = 'No hay ubicación disponible para este paquete.';
+          return;
+        }
+
+        const query = encodeURIComponent(estado || destino || 'Mexico');
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
+
+        try {
+          const response = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+          const results = await response.json();
+
+          if (!results.length) {
+            if (status) status.innerText = 'No se encontró una ubicación para esta dirección.';
+            return;
+          }
+
+          const location = results[0];
+          const lat = parseFloat(location.lat);
+          const lon = parseFloat(location.lon);
+
+          const map = L.map('map').setView([lat, lon], 12);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
+          L.marker([lat, lon]).addTo(map).bindPopup(`<strong>Ubicación del paquete</strong><br>${estado}`).openPopup();
+          if (status) status.innerText = `Ubicación encontrada: ${location.display_name}`;
+        } catch (error) {
+          if (status) status.innerText = 'Error al obtener la ubicación. Intenta nuevamente más tarde.';
+          console.error('Leaflet/Nominatim error:', error);
+        }
+      }
+
+      <% if (paqueteEncontrado) { %>
+      window.addEventListener('load', function() {
+        initMap(<%- JSON.stringify(paqueteEncontrado.estado) %>, <%- JSON.stringify(paqueteEncontrado.destino) %>);
+      });
+      <% } %>
+    </script>
+    <%- include('partials/footer') %>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>403 — Acceso denegado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root{ --c1:#11282e; --c2:#0e535f; --c3:#0a8c9d; --c4:#05d6e8; --c5:#0ffff8; --c6:#e2e2e2 }
+      .btn-brand { background: linear-gradient(90deg,var(--c4),var(--c5)); color: var(--c1); box-shadow: 0 10px 30px rgba(5,214,232,0.12); }
+      .card { border: 1px solid rgba(17,40,46,0.06); background: linear-gradient(180deg, #ffffff 0%, #fbfdfd 100%); }
+      .soft-shadow { box-shadow: 0 8px 30px rgba(2,6,23,0.06); }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-fade { animation: fadeIn .6s ease both; }
+    </style>
+  </head>
+  <body class="bg-gradient-to-b from-gray-50 to-white min-h-screen flex items-center justify-center">
+    <div class="max-w-lg bg-white rounded-2xl shadow-lg p-8 text-center card soft-shadow animate-fade">
+      <h1 class="text-5xl font-extrabold text-red-600">403</h1>
+      <h2 class="text-2xl font-semibold mt-2">Acceso denegado</h2>
+      <p class="mt-4 text-gray-600">No tienes permisos suficientes para acceder a este recurso.</p>
+      <p class="mt-4 text-sm text-gray-400">Si crees que esto es un error, contacta con el administrador del sistema.</p>
+      <div class="mt-6">
+        <a href="/" class="inline-block btn-brand px-4 py-2 rounded-lg">Volver al inicio</a>
+      </div>
+    </div>
+  </body>
+</html>

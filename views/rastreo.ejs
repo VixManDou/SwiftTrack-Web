@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SwiftTrack Web — Resultado de rastreo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+e2Gdw3EO1B5e+9uhu+eZzxe7k7GIaJiPtJC/E7r0=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-QVNmW5PqHNV7NZX5UPj0L3s5ZLUx3ozQwElIj7gUHUY=" crossorigin=""></script>
+    <style>
+      .btn-volver { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(90deg,#0a8c9d,#05d6e8); color: white; border-radius: 9999px; padding: 0.75rem 1.5rem; font-weight: 600; transition: transform .2s ease; }
+      .btn-volver:hover { transform: translateY(-2px); }
+    </style>
+  </head>
+  <body class="bg-gradient-to-b from-white to-gray-50 min-h-screen antialiased text-gray-800">
+    <header class="bg-[#0C3B45] text-white sticky top-0 z-30 shadow-lg">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">SwiftTrack</h1>
+          <p class="text-xs text-white/80">Resultado del rastreo</p>
+        </div>
+        <a href="/" class="btn-volver">Volver al Inicio</a>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-6">
+      <section class="bg-white rounded-3xl shadow-lg p-8">
+        <h2 class="text-3xl font-semibold text-slate-900">Información del paquete</h2>
+        <div class="grid gap-6 mt-6 md:grid-cols-2">
+          <div class="space-y-3">
+            <div class="rounded-2xl border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-600 uppercase tracking-[0.2em]">Folio</h3>
+              <p class="mt-2 text-xl font-semibold text-slate-900"><%= paquete.folio %></p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-600 uppercase tracking-[0.2em]">Destino</h3>
+              <p class="mt-2 text-base text-gray-700"><%= paquete.destino %></p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-600 uppercase tracking-[0.2em]">Peso</h3>
+              <p class="mt-2 text-base text-gray-700"><%= paquete.peso %> kg</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 p-5">
+              <h3 class="text-sm font-semibold text-slate-600 uppercase tracking-[0.2em]">Estado</h3>
+              <p class="mt-2 text-base text-gray-700"><%= paquete.estado %></p>
+            </div>
+          </div>
+          <div class="rounded-3xl overflow-hidden border border-slate-200">
+            <div class="bg-slate-950 text-white p-5">
+              <h3 class="text-lg font-semibold">Ubicación aproximada</h3>
+              <p class="mt-2 text-sm text-slate-300">El mapa se obtiene automáticamente desde OpenStreetMap según el destino o la ubicación actual.</p>
+            </div>
+            <div id="map" style="height: 350px; width: 100%;"></div>
+            <p id="map-status" class="p-4 text-sm text-gray-500">Cargando ubicación...</p>
+            <div id="map-fallback" class="hidden rounded-b-3xl border-t border-slate-200 bg-slate-50 p-6 text-center">
+              <p id="map-fallback-text" class="text-slate-700"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-8 bg-white rounded-3xl shadow-lg p-8">
+        <details class="group border border-slate-200 rounded-3xl overflow-hidden">
+          <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 text-lg font-semibold text-slate-900 bg-slate-50 transition-colors hover:bg-slate-100">
+            <span>Información del recorrido</span>
+            <span class="text-slate-500 group-open:rotate-180 transition-transform">▾</span>
+          </summary>
+          <div class="border-t border-slate-200 p-5 space-y-4">
+            <% if (historial && historial.length > 0) { %>
+              <div class="space-y-3">
+                <% historial.forEach(function(registro) { %>
+                  <div class="rounded-2xl border border-slate-200 p-4 bg-slate-50">
+                    <p class="text-sm text-slate-500"><strong>[<%= registro.fecha %> - <%= registro.hora %>]</strong></p>
+                    <p class="mt-1 text-base text-slate-800">Ubicación: <span class="font-medium"><%= registro.ubicacion %></span></p>
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <div class="rounded-2xl border border-slate-200 p-4 bg-slate-50">
+                <p class="text-sm text-slate-500"><strong>Paquete creado</strong></p>
+                <p class="mt-2 text-base text-slate-800">Sin registros previos en acciones rápidas. Se muestra la ubicación inicial.</p>
+              </div>
+            <% } %>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      const MEXICO_CAPITALS = {
+        'Aguascalientes': [21.8853, -102.2916],
+        'Baja California': [32.5083, -116.9627],
+        'Baja California Sur': [24.1426, -110.3105],
+        'Campeche': [19.8458, -90.5349],
+        'Chiapas': [16.7478, -93.1130],
+        'Chihuahua': [28.6353, -106.0889],
+        'Ciudad de México': [19.4326, -99.1332],
+        'Coahuila': [25.4308, -101.0009],
+        'Colima': [19.2433, -103.7240],
+        'Durango': [24.0277, -104.6532],
+        'Estado de México': [19.2910, -99.6587],
+        'Guanajuato': [21.0190, -101.2574],
+        'Guerrero': [17.5516, -99.5059],
+        'Hidalgo': [20.0911, -98.7620],
+        'Jalisco': [20.6597, -103.3496],
+        'Michoacán': [19.7020, -101.1840],
+        'Morelos': [18.6814, -99.1013],
+        'Nayarit': [21.5060, -104.8958],
+        'Nuevo León': [25.6866, -100.3161],
+        'Oaxaca': [17.0732, -96.7266],
+        'Puebla': [19.0413, -98.2062],
+        'Querétaro': [20.5888, -100.3899],
+        'Quintana Roo': [20.2110, -87.4653],
+        'San Luis Potosí': [22.1565, -100.9855],
+        'Sinaloa': [24.8076, -107.3976],
+        'Sonora': [29.0729, -110.9559],
+        'Tabasco': [17.8409, -92.6189],
+        'Tamaulipas': [23.7369, -99.1411],
+        'Tlaxcala': [19.3188, -98.2375],
+        'Veracruz': [19.1738, -96.1342],
+        'Yucatán': [20.9674, -89.5926],
+        'Zacatecas': [22.7709, -102.5832],
+      };
+
+      let mapaLeaflet = null;
+
+      function showMapFallback(locationText) {
+        const mapElement = document.getElementById('map');
+        const status = document.getElementById('map-status');
+        const fallback = document.getElementById('map-fallback');
+        const fallbackText = document.getElementById('map-fallback-text');
+
+        if (mapElement) {
+          mapElement.style.display = 'none';
+        }
+        if (status) {
+          status.style.display = 'none';
+        }
+        if (fallback) {
+          fallbackText.textContent = `Ubicación registrada: ${locationText}`;
+          fallback.classList.remove('hidden');
+        }
+      }
+
+      async function renderPackageMap(locationQuery, folio) {
+        const status = document.getElementById('map-status');
+        const mapElement = document.getElementById('map');
+        const fallback = document.getElementById('map-fallback');
+        if (!mapElement || !status || !fallback) return;
+
+        mapElement.style.height = '350px';
+        mapElement.style.width = '100%';
+        mapElement.style.display = 'block';
+        status.style.display = 'block';
+        fallback.classList.add('hidden');
+
+        const cleanedLocation = (locationQuery || 'México').toString().replace(/^Paquetería\s*/i, '').trim() || 'México';
+        const query = encodeURIComponent(`${cleanedLocation}, México`);
+        const nominatimUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
+
+        try {
+          status.innerText = `Buscando posición para ${cleanedLocation}...`;
+
+          let coords = null;
+          try {
+            const response = await fetch(nominatimUrl, { headers: { 'Accept-Language': 'es' } });
+            const data = await response.json();
+            if (Array.isArray(data) && data.length > 0) {
+              coords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+              status.innerText = `Ubicación encontrada: ${data[0].display_name}`;
+            }
+          } catch (geoError) {
+            console.warn('Nominatim request failed:', geoError);
+          }
+
+          if (!coords) {
+            const key = cleanedLocation.replace(/\s+/g, ' ').trim();
+            coords = MEXICO_CAPITALS[key];
+            if (coords) {
+              status.innerText = `Se usaron coordenadas locales para ${key}`;
+            }
+          }
+
+          if (!coords) {
+            showMapFallback(cleanedLocation);
+            return;
+          }
+
+          if (mapaLeaflet) {
+            mapaLeaflet.remove();
+            mapaLeaflet = null;
+          }
+
+          mapaLeaflet = L.map('map').setView(coords, 8);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(mapaLeaflet);
+
+          L.marker(coords).addTo(mapaLeaflet)
+            .bindPopup(`<strong>${folio}</strong><br>${cleanedLocation}`)
+            .openPopup();
+
+          setTimeout(() => {
+            mapaLeaflet.invalidateSize();
+          }, 250);
+        } catch (error) {
+          console.error('Mapa error:', error);
+          showMapFallback(cleanedLocation);
+        }
+      }
+
+      renderPackageMap(<%- JSON.stringify(ubicacionActual || paquete.destino || paquete.estado) %>, <%- JSON.stringify(paquete.folio) %>);
+    </script>
+  </body>
+</html>

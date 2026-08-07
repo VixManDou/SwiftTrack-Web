@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SwiftTrack Web — Login Administrador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root{ --c1:#11282e; --c2:#0e535f; --c3:#0a8c9d; --c4:#05d6e8; --c5:#0ffff8; --c6:#e2e2e2; }
+      .btn-brand { background: linear-gradient(90deg,var(--c4),var(--c5)); color: var(--c1); box-shadow: 0 10px 30px rgba(5,214,232,0.12); }
+      .card { border: 1px solid rgba(17,40,46,0.06); background: linear-gradient(180deg, #ffffff 0%, #fbfdfd 100%); }
+      .soft-shadow { box-shadow: 0 8px 30px rgba(2,6,23,0.06); }
+      .brand-bg { background: linear-gradient(90deg, var(--c1) 0%, var(--c2) 40%, var(--c3) 100%); }
+    </style>
+  </head>
+  <body class="bg-gradient-to-b from-white to-gray-50 min-h-screen flex flex-col justify-between antialiased text-gray-800">
+    <header class="brand-bg text-white sticky top-0 z-30">
+      <div class="max-w-7xl mx-auto py-4 px-6 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold">SwiftTrack</h1>
+          <p class="text-xs text-white/80">Acceso administrativo</p>
+        </div>
+        <nav class="text-sm">
+          <a href="/" class="text-white/90 hover:underline">Inicio</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-3xl w-full mx-auto p-6 my-auto">
+      <section class="bg-white rounded-3xl shadow-lg p-8 card soft-shadow">
+        <h2 class="text-3xl font-semibold text-slate-900">Ingresar como administrador</h2>
+        <p class="mt-3 text-gray-600">Accede al panel administrativo para supervisar envíos, actualizar estados y controlar la operación de logística.</p>
+
+        <form action="/admin/login" method="POST" class="mt-8 grid gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Usuario</label>
+            <input name="usuario" type="text" placeholder="Admin" class="w-full border rounded-xl px-4 py-3 mt-2 focus:outline-none focus:ring-2 focus:ring-sky-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700">Contraseña</label>
+            <input name="password" type="password" placeholder="Contraseña" class="w-full border rounded-xl px-4 py-3 mt-2 focus:outline-none focus:ring-2 focus:ring-sky-300" />
+          </div>
+          <button type="submit" class="btn-brand w-full rounded-xl px-4 py-3 font-semibold">Entrar</button>
+        </form>
+
+        <% if (loginMensaje) { %>
+          <p class="mt-4 text-sm text-red-600"><%= loginMensaje %></p>
+        <% } %>
+      </section>
+    </main>
+
+    <%- include('partials/footer') %>
+  </body>
+</html>

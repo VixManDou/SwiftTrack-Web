@@ -26,5 +26,5 @@ app.use('/', paqueteRoutes);
 
 // Arrancar servidor
 app.listen(PORT, () => {
-  console.log(`Servidor SwiftTrack Web disponible en http://localhost:${PORT}`);
+  console.log(`Servidor SwiftTrack Web actualizado disponible en http://localhost:${PORT}`);
 });

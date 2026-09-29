@@ -51,3 +51,7 @@ Visita `http://localhost:3000`.
 ### Notas
 - El acceso administrativo está simulado mediante `?rol=admin` en la query string. Ej: `http://localhost:3000/?rol=admin`.
 - Reemplaza la simulación por un sistema de autenticación real antes de producción.
+
+## PD.
+
+Esta es una version mejorada con diversos aspectos nuevos

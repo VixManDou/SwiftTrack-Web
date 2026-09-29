@@ -1,0 +1,26 @@
+name: Continuous Integration Workflow
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 1. Obtener codigo (Checkout)
+      uses: actions/checkout@v4
+
+    - name: 2. Preparar entorno (Node.js)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: 3. Instalar dependencias
+      run: npm install
+
+    - name: 4. Compilar / Verificar y Ejecutar pruebas
+      run: npm test
